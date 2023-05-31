@@ -1,0 +1,32 @@
+.test {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding-top: 40px;
+  padding-bottom: 40px;
+
+  button {
+    padding: 8px;
+    border-radius: 8px;
+
+    &:active,
+    &:focus-visible {
+      opacity: 0.9;
+    }
+
+    @media (hover: hover) {
+      &:hover {
+        opacity: 0.9;
+      }
+    }
+
+    &:nth-of-type(1) {
+      background: var(--bg-error);
+    }
+
+    &:nth-of-type(2) {
+      background: var(--bg-success);
+    }
+  }
+}

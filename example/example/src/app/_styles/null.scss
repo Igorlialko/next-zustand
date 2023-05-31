@@ -1,0 +1,115 @@
+* {
+  padding: 0;
+  margin: 0;
+  border: 0;
+}
+
+*,
+*:before,
+*:after {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  outline: none;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-size-adjust: none;
+}
+
+:focus-visible,
+:active {
+  outline: none;
+}
+
+a:focus-visible,
+a:active {
+  outline: none;
+}
+
+aside,
+nav,
+footer,
+header,
+section {
+  display: block;
+}
+
+body {
+  overscroll-behavior: none;
+  line-height: 1;
+  color: var(--text-main-white);
+  background: var(--bg-main-black);
+  -ms-text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+}
+
+html,
+body {
+  min-width: var(--minWidth);
+  min-height: var(--app-height);
+  font-size: var(--fontSize);
+  line-height: var(--line-height);
+  scroll-behavior: smooth;
+}
+
+input,
+button,
+textarea {
+  font-family: var(--fontFamily);
+  font-size: inherit;
+  line-height: inherit;
+  color: var(--bg-main-black);
+}
+
+input::-ms-clear {
+  display: none;
+}
+
+button {
+  color: var(--text-main-white);
+  cursor: pointer;
+  background-color: inherit;
+}
+
+button::-moz-focus-inner {
+  padding: 0;
+  border: 0;
+}
+
+a,
+a:visited,
+a:hover {
+  text-decoration: none;
+}
+
+ul li {
+  list-style: none;
+}
+
+img {
+  vertical-align: top;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+body {
+  width: 100vw;
+  overflow-x: hidden;
+}
+
+*::-webkit-scrollbar {
+  display: none;
+}
+
+*::-webkit-scrollbar-thumb {
+  display: none;
+}

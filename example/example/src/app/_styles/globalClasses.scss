@@ -1,0 +1,25 @@
+@import 'variables';
+
+._container {
+  width: 100%;
+  max-width: var(--maxWidthContainer);
+  margin: 0 auto;
+}
+
+@media (min-width: $md2min) {
+  ._container {
+    padding: 0 32px;
+  }
+}
+
+@media (min-width: $md3min) and (max-width: $md2max) {
+  ._container {
+    padding: 0 20px;
+  }
+}
+
+@media (max-width: $md3max) {
+  ._container {
+    padding: 0 16px;
+  }
+}

@@ -1,0 +1,21 @@
+:root {
+  //==global
+  --fontSize: 16px;
+  --line-height: 160%;
+  --app-height: 100vh;
+  //===============WIDTH====================
+  --minWidth: 375px;
+  --maxWidthContainer: 1240px;
+
+  //========text===========
+  --text-main-white: #f0f5ff;
+  --text-secondary-grey: #9ba0a7;
+  --text-tertiary-dark-grey: #696e76;
+
+  //=======background======
+  --bg-for-icons-grey: #313946;
+  --bg-hover: #4c535e;
+  --bg-main-black: #010a18;
+  --bg-success: #008756;
+  --bg-error: #d83640;
+}

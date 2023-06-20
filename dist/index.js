@@ -23,7 +23,14 @@ var createProvider = function createProvider() {
   return function (initializer) {
     var initializeStore = function initializeStore(initialState) {
       return zustand.createStore()(function () {
-        return _extends({}, initializer.apply(void 0, arguments), initialState);
+        var initStore = initializer.apply(void 0, arguments);
+        var initState = {};
+        if (typeof initialState === 'function') {
+          initState = initialState(initStore);
+        } else {
+          initState = initialState;
+        }
+        return _extends({}, initStore, initState);
       });
     };
     var ZustandContext = React.createContext(null);

@@ -6,12 +6,23 @@ import { StateCreator, StoreMutatorIdentifier } from 'zustand/vanilla'
 export const createProvider =
   <T, >() =>
     <Mos extends [StoreMutatorIdentifier, unknown][] = []>(initializer: StateCreator<T, [], Mos>) => {
-      type TInitialState = Partial<T>;
-      const initializeStore = (initialState: TInitialState) =>
-        createStore<T>()((...args) => ({
-          ...initializer(...args),
-          ...initialState
-        }))
+
+      type TInitialState = Partial<T>
+      type TInitState = (prevStore: ReturnType<typeof initializer>) => TInitialState;
+      const initializeStore = (initialState: TInitState | TInitialState) =>
+        createStore<T>()((...args) => {
+          const initStore = initializer(...args)
+          let initState: TInitialState = {}
+          if (typeof initialState === 'function') {
+            initState = initialState(initStore)
+          } else {
+            initState = initialState
+          }
+          return {
+            ...initStore,
+            ...initState
+          }
+        })
 
       type StoreType = ReturnType<typeof initializeStore>;
 

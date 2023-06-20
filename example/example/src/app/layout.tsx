@@ -1,16 +1,17 @@
 import './_styles/globals.scss'
-import {Inter} from 'next/font/google'
-import StoreProvider from "@/store/StoreProvider";
+import { Inter } from 'next/font/google'
+import StoreProvider from '@/store/StoreProvider'
+import SliceStoreProvider from '@/store/SliceStoreProvider'
 
-const inter = Inter({subsets: ['latin'], variable: '--fontFamily'});
+const inter = Inter({ subsets: ['latin'], variable: '--fontFamily' })
 
 export const metadata = {
   title: 'Next-Zustand',
-  description: 'Example app',
+  description: 'Example app'
 }
 
 export default async function RootLayout({
-                                           children,
+                                           children
                                          }: {
   children: React.ReactNode
 }) {
@@ -35,13 +36,17 @@ export default async function RootLayout({
     })
 
   return (
-    <html lang="en">
-    <body style={{fontFamily: 'var(--fontFamily)'}} className={inter.variable}>
+    <html lang='en'>
+    <body style={{ fontFamily: 'var(--fontFamily)' }} className={inter.variable}>
     <StoreProvider initialState={{
       count: await getInitialCount(),
       post: await getInitialPost()
     }}>
-      {children}
+      <SliceStoreProvider initialCountSlice={{
+        count: 100000
+      }}>
+        {children}
+      </SliceStoreProvider>
     </StoreProvider>
     </body>
     </html>

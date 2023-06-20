@@ -1,15 +1,17 @@
 'use client'
 
 import { Provider, Store } from '../store'
+import { ReactNode } from 'react'
 
-const StoreProvider = ({children, initialState}: {
-  initialState:Partial<Store>
+const StoreProvider = ({ children, initialState }: {
+  children: ReactNode,
+  initialState: Partial<Store>
 }) => {
   return (
-    <Provider initialState={(state)=>initialState}>
+    <Provider initialState={initialState}>
       {children}
     </Provider>
-  );
-};
+  )
+}
 
-export default StoreProvider;
+export default StoreProvider

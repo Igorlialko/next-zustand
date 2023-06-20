@@ -33,7 +33,7 @@ export const createProvider =
                                initialState
                              }: {
         children: ReactNode;
-        initialState: TInitialState;
+        initialState: TInitState | TInitialState;
       }) => {
         const storeRef = useRef<StoreType>()
         if (!storeRef.current) {

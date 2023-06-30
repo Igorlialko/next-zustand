@@ -12,12 +12,7 @@ export const createProvider =
       const initializeStore = (initialState: TInitState | TInitialState) =>
         createStore<T>()((...args) => {
           const initStore = initializer(...args)
-          let initState: TInitialState = {}
-          if (typeof initialState === 'function') {
-            initState = initialState(initStore)
-          } else {
-            initState = initialState
-          }
+          const initState: TInitialState = typeof initialState === 'function' ? initialState(initStore) : initialState
           return {
             ...initStore,
             ...initState
@@ -42,7 +37,7 @@ export const createProvider =
         return <ZustandContext.Provider value={storeRef.current}>{children}</ZustandContext.Provider>
       }
 
-      const useStore = <R, >(selector: (state: T) => R, shallow?: (a: R, b: R) => boolean): R => {
+      const useStore = <R, >(selector: (state: T) => R, shallow?: (a: R, b: R) => boolean) => {
         const store = useContext(ZustandContext)
 
         if (!store) throw new Error('Store is missing the provider')

@@ -4,7 +4,7 @@ import { useStore } from '@/store'
 import { useStoreSlice } from '@/store/sliceStore'
 
 const Count = () => {
-  const count = useStore(store => store.count) // You can use one selector
+  const count = useStore(state => state.count) // You can use one selector
   const countSlice = useStoreSlice(store => store.countSlice.count)
   return <>
     <p>{`Count: ${count}`}</p>

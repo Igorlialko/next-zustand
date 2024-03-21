@@ -1,6 +1,6 @@
 {
   "name": "next-zustand",
-  "version": "1.0.8",
+  "version": "1.1.0",
   "description": "Create Zustand with Provider",
   "author": "Igor Lialko",
   "keywords": [

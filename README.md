@@ -4,15 +4,6 @@
 
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 
-```json
-{
-  "peerDependencies": {
-    "react": ">=16.8.0",
-    "zustand": ">=4.0.0"
-  }
-}
-```
-
 ## Install
 
 ```bash
@@ -32,6 +23,7 @@ Init Store:
 'use client' //for next js app directory v13^
 
 import { createProvider } from 'next-zustand';
+import {shallow} from "zustand/shallow";
 
 export type Store = {
   count: number;
@@ -39,7 +31,7 @@ export type Store = {
   setNextCount: () => void;
 };
 
-export const { Provider, useStore } = createProvider<Store>()(
+const creators = createProvider<Store>()(
   (set) => ({
     count: 0,
     setPrevCount: () => {
@@ -48,8 +40,12 @@ export const { Provider, useStore } = createProvider<Store>()(
     setNextCount: () => {
       set((state) => ({ count: state.count + 1 }))
     }
-  })
+  }),
+  shallow // You can use shallow function for optimize re-renders if this need
 );
+
+export const useStore = creators.getUseStore()
+export const Provider = creators.Provider
 
 
 ```
@@ -86,7 +82,6 @@ In Components :
 'use client'
 
 import { useStore } from '@/store'
-import {shallow} from "zustand/shallow";
 
 function App() {
   const count = useStore(store => store.count) // You can use one selector
@@ -94,7 +89,7 @@ function App() {
   const {setPrevCount, setNextCount} = useStore(store => ({
     setNextCount: store.setNextCount,
     setPrevCount: store.setPrevCount,
-  }),shallow) // You can use shallow function for optimize re-renders if this need
+  }))
 
   return (
     <div className="App">

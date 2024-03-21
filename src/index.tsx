@@ -1,50 +1,67 @@
 import React, { ReactNode, createContext, useContext, useRef } from 'react'
 
-import { createStore } from 'zustand'
+import { createStore, Mutate } from 'zustand'
 import { StateCreator, StoreMutatorIdentifier } from 'zustand/vanilla'
 import { useStoreWithEqualityFn } from 'zustand/traditional'
+import { StoreApi } from 'zustand'
 
-export const createProvider =
-  <T, >(shallowFn?: <T1>(objA: T1, objB: T1) => boolean) =>
-    <Mos extends [StoreMutatorIdentifier, unknown][] = []>(initializer: StateCreator<T, [], Mos>) => {
+type ExtractState<S> = S extends { getState: () => infer T } ? T : never
+
+type TCreateProvider = {
+  <T>(): <Mos extends [StoreMutatorIdentifier, unknown][] = []>(
+    initializer: StateCreator<T, [], Mos>,
+    defaultEqualityFn?: <U>(a: U, b: U) => boolean
+  ) => ({
+    getUseStore: () => <F>(
+      selector: (state: ExtractState<Mutate<StoreApi<T>, Mos>>) => F,
+      equalityFn?: (a: F, b: F) => boolean
+    ) => F;
+    Provider: ({
+                 children,
+                 initialState
+               }: { children: ReactNode, initialState: ((prevStore: ReturnType<StateCreator<T, [], Mos>>) => Partial<T>) | Partial<T> }) => JSX.Element;
+  })
+}
+
+export const createProvider = (
+  <T, >() =>
+    <Mos extends [StoreMutatorIdentifier, unknown][] = []>(initializer: StateCreator<T, [], Mos>, defaultEqualityFn?: <U>(a: U, b: U) => boolean) => {
 
       type TInitialState = Partial<T>
-      type TInitState = (prevStore: ReturnType<typeof initializer>) => TInitialState;
+      type TInitState = (prevStore: ReturnType<StateCreator<T, [], Mos>>) => TInitialState;
       const initializeStore = (initialState: TInitState | TInitialState) =>
-        createStore<T>()((...args) => {
+        createStore((...args) => {
           const initStore = initializer(...args)
           const initState: TInitialState = typeof initialState === 'function' ? initialState(initStore) : initialState
           return {
             ...initStore,
             ...initState
           }
-        })
+        }) as StoreApi<T>
 
-      type StoreType = ReturnType<typeof initializeStore>;
+      const ZustandContext = createContext<StoreApi<T>|null>(null)
 
-      const ZustandContext = createContext<StoreType | null>(null)
-
-      const StoreProvider = ({
-                               children,
-                               initialState
-                             }: {
-        children: ReactNode;
-        initialState: TInitState | TInitialState;
-      }) => {
-        const storeRef = useRef<StoreType>()
-        if (!storeRef.current) {
-          storeRef.current = initializeStore(initialState)
+      return {
+        Provider({
+                   children,
+                   initialState
+                 }: {
+          children: ReactNode;
+          initialState: TInitState | TInitialState;
+        }) {
+          const storeRef = useRef<StoreApi<T>|null>(null)
+          if (!storeRef.current) {
+            storeRef.current = initializeStore(initialState)
+          }
+          return <ZustandContext.Provider value={storeRef.current}>{children}</ZustandContext.Provider>
+        },
+        getUseStore() {
+          return function(selector?: any, equalityFn = defaultEqualityFn) {
+            const api = useContext(ZustandContext)
+            if (!api) throw new Error('Store is missing the provider')
+            return useStoreWithEqualityFn(api, selector, equalityFn)
+          }
         }
-        return <ZustandContext.Provider value={storeRef.current}>{children}</ZustandContext.Provider>
       }
-
-      const useStore = <R, >(selector: (state: T) => R, equalityFn?: (a: R, b: R) => boolean) => {
-        const store = useContext(ZustandContext)
-
-        if (!store) throw new Error('Store is missing the provider')
-
-        return useStoreWithEqualityFn(store, selector, shallowFn || equalityFn)
-      }
-
-      return { Provider: StoreProvider, useStore }
     }
+) as TCreateProvider

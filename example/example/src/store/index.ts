@@ -3,6 +3,7 @@
 // import {createProvider} from 'next-zustand';
 
 import { createProvider } from '../../../../src'
+import { shallow } from 'zustand/shallow'
 
 export type Store = {
   count: number,
@@ -19,22 +20,22 @@ export type Store = {
   setSubtitle: (subtitle: string) => void;
 };
 
-export const {Provider, useStore} = createProvider<Store>()(
+const creators = createProvider<Store>()(
   (set) => ({
     count: 0,
     post: {
       id: 0,
       name: 'first',
       description: {
-        title: "Test post",
+        title: 'Test post',
         subtitle: 'about post'
       }
     },
     setPrevCount: () => {
-      set((state) => ({count: state.count - 1}))
+      set((state) => ({ count: state.count - 1 }))
     },
     setNextCount: () => {
-      set((state) => ({count: state.count + 1}))
+      set((state) => ({ count: state.count + 1 }))
     },
     setSubtitle: (subtitle) => {
       set((state) => ({
@@ -47,5 +48,8 @@ export const {Provider, useStore} = createProvider<Store>()(
         }
       }))
     }
-  })
-);
+  }), shallow
+)
+
+export const useStore = creators.getUseStore()
+export const Provider = creators.Provider

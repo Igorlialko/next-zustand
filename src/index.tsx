@@ -1,10 +1,11 @@
 import React, { ReactNode, createContext, useContext, useRef } from 'react'
 
-import { createStore, useStore as useStoreZustand } from 'zustand'
+import { createStore } from 'zustand'
 import { StateCreator, StoreMutatorIdentifier } from 'zustand/vanilla'
+import { useStoreWithEqualityFn } from 'zustand/traditional'
 
 export const createProvider =
-  <T, >() =>
+  <T, >(shallowFn?: <T1>(objA: T1, objB: T1) => boolean) =>
     <Mos extends [StoreMutatorIdentifier, unknown][] = []>(initializer: StateCreator<T, [], Mos>) => {
 
       type TInitialState = Partial<T>
@@ -37,12 +38,12 @@ export const createProvider =
         return <ZustandContext.Provider value={storeRef.current}>{children}</ZustandContext.Provider>
       }
 
-      const useStore = <R, >(selector: (state: T) => R, shallow?: (a: R, b: R) => boolean) => {
+      const useStore = <R, >(selector: (state: T) => R, equalityFn?: (a: R, b: R) => boolean) => {
         const store = useContext(ZustandContext)
 
         if (!store) throw new Error('Store is missing the provider')
 
-        return useStoreZustand(store, selector, shallow)
+        return useStoreWithEqualityFn(store, selector, shallowFn || equalityFn)
       }
 
       return { Provider: StoreProvider, useStore }

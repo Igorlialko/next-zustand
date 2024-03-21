@@ -1,6 +1,8 @@
 'use client'
 
-import {createProvider} from 'next-zustand';
+// import {createProvider} from 'next-zustand';
+
+import { createProvider } from '../../../../src'
 
 export type Store = {
   count: number,
